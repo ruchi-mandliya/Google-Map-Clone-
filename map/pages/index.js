@@ -18,7 +18,7 @@ const Home = () => {
   const [coordinates, setCoordinates] = useState({ lat: 0, lng: 0 });
   const [type, setType] = useState("restaurants");
   const [ratings, setRatings] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   return (
     <Flex
       justifyContent={"center"}
