@@ -5,8 +5,20 @@ import List from "../components/List";
 import Map from "../components/Map";
 import PlaceDetail from "../components/PlaceDetail";
 
+const places = [
+  { name: "place1" },
+  { name: "place2" },
+  { name: "place3" },
+  { name: "place4" },
+  { name: "place5" },
+  { name: "place6" },
+];
+
 const Home = () => {
   const [coordinates, setCoordinates] = useState({ lat: 0, lng: 0 });
+  const [type, setType] = useState("restaurants");
+  const [ratings, setRatings] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
   return (
     <Flex
       justifyContent={"center"}
@@ -17,8 +29,12 @@ const Home = () => {
       maxHeight={"100vh"}
       position={"relative"}
     >
-      <Header />
-      <List />
+      <Header
+        setType={setType}
+        setRatings={setRatings}
+        setCoordinates={setCoordinates}
+      />
+      <List places={places} isLoading={isLoading} />
       <Map setCoordinates={setCoordinates} coordinates={coordinates} />
     </Flex>
   );
