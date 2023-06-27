@@ -1,24 +1,45 @@
-import React, { useState } from "react";
 import { Flex } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
 import Header from "../components/Header";
 import List from "../components/List";
 import Map from "../components/Map";
 import PlaceDetail from "../components/PlaceDetail";
-
-const places = [
-  { name: "place1" },
-  { name: "place2" },
-  { name: "place3" },
-  { name: "place4" },
-  { name: "place5" },
-  { name: "place6" },
-];
+import { getPlacesData } from "./api";
+import Head from "next/head";
 
 const Home = () => {
+  const [places, setPlaces] = useState([]);
+  const [filteredPlaces, setFilteredPlaces] = useState([]);
   const [coordinates, setCoordinates] = useState({ lat: 0, lng: 0 });
+  const [bounds, setBounds] = useState(null);
   const [type, setType] = useState("restaurants");
   const [ratings, setRatings] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    navigator.geolocation.getCurrentPosition(
+      ({ coords: { latitude, longitude } }) => {
+        console.log({ latitude, longitude });
+        setCoordinates({ lat: latitude, lng: longitude });
+      }
+    );
+  }, []);
+
+  useEffect(() => {
+    const filteredData = places.filter((place) => place.rating > ratings);
+    setFilteredPlaces(filteredData);
+    console.log({ ratings });
+  }, [ratings]);
+
+  useEffect(() => {
+    setIsLoading(true);
+    getPlacesData(type, bounds?.sw, bounds?.ne).then((data) => {
+      console.log(data);
+      setPlaces(data);
+      setIsLoading(false);
+    });
+  }, [type, coordinates, bounds]);
+
   return (
     <Flex
       justifyContent={"center"}
@@ -29,13 +50,27 @@ const Home = () => {
       maxHeight={"100vh"}
       position={"relative"}
     >
+      <Head>
+        <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=Your_API_KEY"></script>
+      </Head>
+
       <Header
         setType={setType}
         setRatings={setRatings}
         setCoordinates={setCoordinates}
       />
-      <List places={places} isLoading={isLoading} />
-      <Map setCoordinates={setCoordinates} coordinates={coordinates} />
+
+      <List
+        places={filteredPlaces.length ? filteredPlaces : places}
+        isLoading={isLoading}
+      />
+
+      <Map
+        setCoordinates={setCoordinates}
+        coordinates={coordinates}
+        setBounds={setBounds}
+        places={filteredPlaces.length ? filteredPlaces : places}
+      />
     </Flex>
   );
 };
