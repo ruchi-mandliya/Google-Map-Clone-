@@ -51,7 +51,7 @@ const Home = () => {
       position={"relative"}
     >
       <Head>
-        <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=Your_API_KEY"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=NEXT_PUBLIC_GOOGLE_MAPS_API_KEY"></script>
       </Head>
 
       <Header
